@@ -74,7 +74,7 @@ namespace WebViewToolkit
                     height,
                     TextureFormat.BGRA32,
                     mipChain: false,
-                    linear: false,
+                    linear: true,
                     _nativeTexturePtr
                 );
 

@@ -26,6 +26,14 @@ namespace WebViewToolkit
 
     static LRESULT CALLBACK HostWindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     {
+        switch (msg)
+        {
+        case WM_SETFOCUS:                      // give focus straight back to Unity's window
+            if (wParam) SetFocus(reinterpret_cast<HWND>(wParam));
+            return 0;
+        case WM_MOUSEACTIVATE:
+            return MA_NOACTIVATE;
+        }
         return DefWindowProcW(hwnd, msg, wParam, lParam);
     }
 
@@ -535,6 +543,10 @@ namespace WebViewToolkit
         }
 
         HRESULT hr = compController->SendMouseInput(kind, virtualKeys, mouseData, point);
+        
+        HWND host = static_cast<HWND>(m_hostWindow);
+        if (host && GetCapture() == host) ReleaseCapture();
+        
         return SUCCEEDED(hr) ? Result::Success : Result::ErrorUnknown;
     }
  
